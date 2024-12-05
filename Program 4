@@ -1,0 +1,138 @@
+# Samuel Foss
+# Program 4 Read Phone Book
+# 12/5/2024
+
+import sqlite3
+
+def userInterface():
+    setupPhonebook()
+    print("Phonebook set up.")
+
+    while True:
+        print("\nOptions:")
+        print("1. Search")
+        print("2. Update")
+        print("3. Remove")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            contactName = input("Name to search: ")
+            searchContact(contactName)
+        elif choice == "2":
+            contactName = input("Name to update: ")
+            newNumber = input("New phone number: ")
+            modifyContact(contactName, newNumber)
+        elif choice == "3":
+            contactName = input("Name to remove: ")
+            removeContact(contactName)
+        else:
+            print("Invalid option.")
+
+def setupPhonebook():
+    connection = sqlite3.connect("phonebook.db")
+    cursor = connection.cursor()
+
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Max", "952-444-1422")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Bob", "612-672-9976")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Ron", "925-157-5123")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Alice", "612-442-7735")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Jess", "422-748-9311")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Rob", "952-886-1944")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Tina", "952-512-7777")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Tonya", "763-647-7777")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Charlie", "442-523-4343")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("John", "777-532-7727")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Sam", "623-885-8842")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Jere", "925-672-7772")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Aly", "622-142-6772")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Jene", "235-743-7345")""")
+    cursor.execute("""INSERT INTO Entries (name, phone) 
+                      VALUES ("Deb", "124-623-7345")""")
+    connection.commit()
+    connection.close()
+
+def search(contactName):
+    connection = sqlite3.connect("phonebook.db")
+    cursor = connection.cursor()
+    cursor.execute("""SELECT phone FROM Entries WHERE name = ?""", (contactName,))
+    data = cursor.fetchone()
+    connection.close()
+    if data:
+        print(f"{contactName}'s number: {data[0]}")
+    else:
+        print(f"{contactName} not found.")
+
+def modify(contactName, newNumber):
+    connection = sqlite3.connect("phonebook.db")
+    cursor = connection.cursor()
+    cursor.execute("""UPDATE Entries SET phone = ? WHERE name = ?""", (newNumber, contactName))
+    connection.commit()
+    if cursor.rowcount > 0:
+        print(f"Updated {contactName}'s number to {newNumber}.")
+    else:
+        print(f"{contactName} not found.")
+    connection.close()
+
+def remove(contactName):
+    connection = sqlite3.connect("phonebook.db")
+    cursor = connection.cursor()
+    cursor.execute("""DELETE FROM Entries WHERE name = ?""", (contactName,))
+    connection.commit()
+    if cursor.rowcount > 0:
+        print(f"Deleted {contactName}.")
+    else:
+        print(f"{contactName} not found.")
+    connection.close()
+
+if __name__ == "__main__":
+    userInterface()
+
+#Output
+
+#Phonebook set up.
+
+#Options:
+#1. Search
+#2. Update
+#3. Remove
+#Choose an option: 3
+#Name to remove: Max
+#Deleted Max.
+
+#Options:
+#1. Search
+#2. Update
+#3. Remove
+#Choose an option: 1
+#Name to search: Jene
+#Jene's number: 235-743-7345
+
+#Options:
+#1. Search
+#2. Update
+#3. Remove
+#Choose an option: 2
+#Name to update: Tina
+#New phone number: 412-525-6614
+#Updated Tina's number to 412-525-6614.
+
+#Options:
+#1. Search
+#2. Update
+#3. Remove
+#Choose an option:
